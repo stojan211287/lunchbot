@@ -111,6 +111,5 @@ if __name__ == "__main__":
                     parsed_menu_item = parsed_menu_item + " " + processed_item
 
             for num, lst in data_model.items():
-                print(num)
                 print(lst)
 
