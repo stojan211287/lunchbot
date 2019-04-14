@@ -76,6 +76,12 @@ if __name__ == "__main__":
         else:
             return stripped_line
 
+    def add_clean_item_to_data_store(clean_item: str, data_list: list) -> list:
+        if not clean_item == "":
+            data_list = data_list.append(clean_item)
+        return data_list
+
+
     data_model = defaultdict(list)
     
     for i, (week_number, link_data) in enumerate(pdf_links.items()):
@@ -89,17 +95,20 @@ if __name__ == "__main__":
             menu_text = pdf_reader.getPage(0).extractText().split(os.linesep)
 
             ind = 1
+            parsed_menu_item = ""
 
-            for menu_text_item in menu_text[1:]:
+            # SKIP FIRST ROW WITH NAMES OF DAYS OF THE WEEK
+            for menu_text_item in menu_text[7:]:
 
                 processed_item = get_menu_item(menu_text_item)
 
                 if processed_item == EXCLUDED:
-                    continue
+                    add_clean_item_to_data_store(parsed_menu_item, data_model[ind])
+                    parsed_menu_item = ""
                 elif processed_item == BREAK:
                     ind += 1
                 else:
-                    data_model[ind].append(processed_item)
+                    parsed_menu_item = parsed_menu_item + " " + processed_item
 
             for num, lst in data_model.items():
                 print(num)
