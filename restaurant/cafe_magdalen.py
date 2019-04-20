@@ -7,13 +7,13 @@ from io import BytesIO
 from bs4 import BeautifulSoup
 from datetime import date
 
+from constants import DAYS_OF_WEEK
+
 
 EXCLUDED = "!"
 BREAK = "__"
 JOIN_NEXT_LINE = "->"
 JOIN_PREVIOUS_LINE = "<-"
-
-DAYS_OF_WEEK = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 
 
 def get_menus(food_url):
@@ -165,8 +165,10 @@ def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
 
     dishes = parse_dishes(food_url=food_url)
     
-    for day_index in range(len(DAYS_OF_WEEK)):
-        day_name = DAYS_OF_WEEK[day_index]
+    restaurant_week = DAYS_OF_WEEK[:5]
+    
+    for day_index in range(len(restaurant_week)):
+        day_name = restaurant_week[day_index]
         
         menu[day_name] = [dishes[dish_index][day_index] for dish_index in dishes.keys()]
         
