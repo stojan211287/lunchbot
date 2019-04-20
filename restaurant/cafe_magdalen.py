@@ -112,7 +112,9 @@ def parse_dishes(food_url):
     dish_types = defaultdict(list)
 
     for i, (week_number, link_data) in enumerate(pdf_links.items()):
+        # DOWNLOAD ONLY FIRST MENU - CURRENT WEEK
         if i == 0:
+            # link_data IS A TUPLE - FIRST ENTRY IS INDEX OF CURRENT MENY IN AN ORDER 3 CYCLE. THE SECOND IS THE LINK
             response = requests.get(link_data[1])
 
             pdf_file = BytesIO(response.content)
