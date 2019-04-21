@@ -7,7 +7,7 @@ from io import BytesIO
 from bs4 import BeautifulSoup
 from datetime import date
 
-from constants import DAYS_OF_WEEK
+from bot.constants import DAYS_OF_WEEK
 
 
 EXCLUDED = "!"
