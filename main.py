@@ -16,6 +16,11 @@ app = Flask(__name__)
 # LOAD MENUS
 menus = Menus()
 
+@app.route(rule="/", methods=["GET", "POST"])
+def welcome():
+    welcome_message = "Welcome to 'What about lunch?' - a service that helps you decide where to go for lunch."
+    return jsonify(message=welcome_message)
+
 @app.route(rule="/<string:restaurant>/<string:day>", methods=["GET"])
 @app.route(rule="/<string:restaurant>", methods=["GET"])
 def whats_for_lunch_today(restaurant: str, day: str = None) -> Response:
