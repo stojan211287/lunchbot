@@ -1,11 +1,11 @@
-import restaurant.cafe_magdalen
-
 from collections import defaultdict
 from datetime import datetime
 
 from flask import Flask, jsonify, Response
 
 from constants import DAYS_OF_WEEK
+from menu import Menus
+from errors import MenuError
 
 # INIT AND CONFIG APP
 APP_ADDRESS = "0.0.0.0"
@@ -14,8 +14,7 @@ APP_PORT = 8000
 app = Flask(__name__)
 
 # LOAD MENUS
-menus = {"CafeMagdalen": restaurant.cafe_magdalen.menu()}
-
+menus = Menus()
 
 @app.route(rule="/<string:restaurant>/<string:day>", methods=["GET"])
 @app.route(rule="/<string:restaurant>", methods=["GET"])
@@ -23,8 +22,10 @@ def whats_for_lunch_today(restaurant: str, day: str = None) -> Response:
     if day is None:
         day = DAYS_OF_WEEK[datetime.today().weekday()]
     try:
-        restaurant_menu = menus[restaurant]
+        restaurant_menu = menus.menu(restaurant)
         return jsonify(lunch=restaurant_menu[day])
+    except MenuError as menu_error:
+        return jsonify(error=str(menu_error))
     except KeyError:
         error_msg = f"Sorry, the restaurant {restaurant} does not seem to have a menu for {day.capitalize()}."
         error_msg += " They do have a menu for: "

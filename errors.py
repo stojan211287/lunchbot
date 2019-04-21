@@ -1,0 +1,2 @@
+class MenuError(Exception):
+    pass
