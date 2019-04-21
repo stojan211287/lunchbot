@@ -13,7 +13,7 @@ class Menus:
         self._restaurant_modules = {}
         
         for menu_available in self._menus:
-            self._restaurant_modules[menu_available] = importlib.import_module(f"restaurant.{menu_available}")
+            self._restaurant_modules[menu_available] = importlib.import_module(f"bot.restaurant.{menu_available}")
         
     def menu(self, restaurant: str) -> dict:
         if restaurant in self._menus:
