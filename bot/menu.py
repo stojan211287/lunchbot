@@ -2,8 +2,8 @@ import importlib
 
 import restaurant
 
-from constants import MENUS_IMPLEMENTED
-from errors import MenuError
+from bot.constants import MENUS_IMPLEMENTED
+from bot.errors import MenuError
 
 
 class Menus:

@@ -3,9 +3,9 @@ from datetime import datetime
 
 from flask import Flask, jsonify, Response
 
-from constants import DAYS_OF_WEEK
-from menu import Menus
-from errors import MenuError
+from bot.constants import DAYS_OF_WEEK
+from bot.menu import Menus
+from bot.errors import MenuError
 
 # INIT AND CONFIG APP
 APP_ADDRESS = "0.0.0.0"
