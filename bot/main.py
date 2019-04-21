@@ -16,11 +16,13 @@ app = Flask(__name__)
 # LOAD MENUS
 menus = Menus()
 
+
 @app.route(rule="/", methods=["GET", "POST"])
 def welcome():
     welcome_message = "Welcome to 'What about lunch?' - a service that helps you decide where to go for lunch. "
     welcome_message += "To use the service, send a GET request to /<restaurant> or /<restaurant>/<day> endpoints."
     return jsonify(message=welcome_message)
+
 
 @app.route(rule="/<string:restaurant>/<string:day>", methods=["GET"])
 @app.route(rule="/<string:restaurant>", methods=["GET"])
@@ -35,15 +37,13 @@ def whats_for_lunch_today(restaurant: str, day: str = None) -> Response:
     except KeyError:
         error_msg = f"Sorry, the restaurant {restaurant} does not seem to have a menu for {day.capitalize()}."
         error_msg += " They do have a menu for: "
-        
+
         for menu_day in restaurant_menu.keys():
-            error_msg += menu_day.capitalize()+" "
-        
+            error_msg += menu_day.capitalize() + " "
+
         return jsonify(error=error_msg)
 
 
 if __name__ == "__main__":
-    
-    app.run(host=APP_ADDRESS,
-            port=APP_PORT,
-            debug=True)
+
+    app.run(host=APP_ADDRESS, port=APP_PORT, debug=True)
