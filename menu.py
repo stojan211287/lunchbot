@@ -1,5 +1,6 @@
 import importlib
-import restaurant.cafe_magdalen
+
+import restaurant
 
 from constants import MENUS_IMPLEMENTED
 from errors import MenuError
