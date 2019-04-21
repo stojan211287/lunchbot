@@ -19,6 +19,7 @@ menus = Menus()
 @app.route(rule="/", methods=["GET", "POST"])
 def welcome():
     welcome_message = "Welcome to 'What about lunch?' - a service that helps you decide where to go for lunch."
+    welcome_message += "To use the service, send a GET request to /<restaurant> or /<restaurant>/<day> endpoints."
     return jsonify(message=welcome_message)
 
 @app.route(rule="/<string:restaurant>/<string:day>", methods=["GET"])
