@@ -1,7 +1,5 @@
 import importlib
 
-import bot.restaurant
-
 from bot.constants import MENUS_IMPLEMENTED
 from bot.errors import MenuError
 
