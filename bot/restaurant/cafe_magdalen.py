@@ -2,12 +2,21 @@ import os
 import requests
 import PyPDF2
 
+import typing
+
+import logging
+import daiquiri
+
 from collections import defaultdict
 from io import BytesIO
 from bs4 import BeautifulSoup
 from datetime import date
 
 from bot.constants import DAYS_OF_WEEK
+
+
+daiquiri.setup(level=logging.DEBUG)
+logger = daiquiri.getLogger("RestaurantCafeMagdalen")
 
 
 EXCLUDED = "!"
@@ -46,32 +55,36 @@ def get_menus(food_url):
     return pdf_links
 
 
-def parse_dishes(food_url):
-    def is_line_break(line_of_menu: str) -> bool:
-        return (
-            line_of_menu.startswith("Meat Main Course")
-            or line_of_menu.startswith("Vegetarian")
-            or line_of_menu.startswith("Daily Snack")
-            or line_of_menu.startswith("Soup")
-            or line_of_menu.startswith("Carbohydrate")
-            or line_of_menu.startswith("Dessert")
-        )
+def parse_dishes(food_url: str, dish_types: typing.List[str]):
+    def is_line_break(line_of_menu: str, dish_types=dish_types) -> bool:
+        for dish_type in dish_types:
+            if line_of_menu.startswith(dish_type):
+                return True
+        return False
 
     def lines_to_exclude(line_of_menu: str) -> bool:
         return (
             line_of_menu.startswith("£")
-            or line_of_menu.startswith("(")
+            or line_of_menu.startswith("1 ")
+            or line_of_menu.startswith("2 ")
+            or line_of_menu.startswith("3 ")
             or line_of_menu.startswith("V ")
             or line_of_menu.startswith("Vg ")
             or line_of_menu.startswith("GF")
             or line_of_menu.startswith("DF")
             or line_of_menu.startswith("H ")
             or line_of_menu.startswith("Allergen")
-            or line_of_menu == ""
-            or line_of_menu == "H"
-            or line_of_menu == "V"
-            or line_of_menu.startswith("Seasonal ")
-            or line_of_menu.startswith("Vegetables 80p")
+            # EXCLUDE SIDES
+            or line_of_menu == "Side Salad"
+            or line_of_menu == "Chips"
+            or line_of_menu == "Baked Beans"
+            or line_of_menu == "Rice"
+            or line_of_menu == "Seasonal Vegetables"
+            or line_of_menu == "Saffron Rice"
+            or line_of_menu == "Stir Fry Vegetables"
+            or line_of_menu == "New Potatoes"
+            # EXCLUDE JACKET POTATO
+            or line_of_menu == "Jacket Potato"
         )
 
     def join_next_line(line_of_menu: str) -> bool:
@@ -79,8 +92,19 @@ def parse_dishes(food_url):
             line_of_menu.endswith("with")
             or line_of_menu.endswith("and")
             or line_of_menu.endswith("in")
-            or line_of_menu.endswith("Jumbo")
-            or line_of_menu.endswith("/")
+            # ESSENTIALLY A LIST OF ADJECTIVES ENDING A LINE
+            or line_of_menu.endswith("Garlic")
+            or line_of_menu.endswith("Sage")
+            or line_of_menu.endswith("Parmesan")
+            or line_of_menu.endswith("Mediterrean")
+            or line_of_menu.endswith("Vegetable")
+            or line_of_menu.endswith("Homemade")
+            or line_of_menu.endswith("Honey")
+            or line_of_menu.endswith("BBQ")
+            or line_of_menu.endswith("Bean")
+            or line_of_menu.endswith("Cinnamon")
+            or line_of_menu.endswith("Brownie")
+            or line_of_menu.endswith("Salted")
         )
 
     def join_previous_line(line_of_menu: str) -> bool:
@@ -88,6 +112,8 @@ def parse_dishes(food_url):
             line_of_menu.startswith("topped")
             or line_of_menu.startswith("served")
             or line_of_menu.startswith("with")
+            or line_of_menu.startswith("and")
+            or line_of_menu.startswith("in")
         )
 
     def construct_return_line(line_of_menu: str) -> str:
@@ -124,7 +150,8 @@ def parse_dishes(food_url):
     for i, (week_number, link_data) in enumerate(pdf_links.items()):
         # DOWNLOAD ONLY FIRST MENU - CURRENT WEEK
         if i == 0:
-            # link_data IS A TUPLE - FIRST ENTRY IS INDEX OF CURRENT MENY IN AN ORDER 3 CYCLE. THE SECOND IS THE LINK
+            # link_data IS A TUPLE - FIRST ENTRY IS INDEX OF CURRENT MENY IN AN ORDER 4 CYCLE.
+            # THE SECOND IS THE LINK
             response = requests.get(link_data[1])
 
             pdf_file = BytesIO(response.content)
@@ -133,11 +160,16 @@ def parse_dishes(food_url):
 
             menu_text = pdf_reader.getPage(0).extractText().split(os.linesep)
 
+            logger.debug(menu_text)
+
             # SKIP WEEK NUMBER AND WEEKDAY NAMES
-            processed_items = [get_menu_item(menu_line) for menu_line in menu_text[7:]]
+            LINES_TO_SKIP = 2
+            processed_items = [
+                get_menu_item(menu_line) for menu_line in menu_text[LINES_TO_SKIP:]
+            ]
 
             item_index = 0
-            dish_index = 1
+            dish_index = 0
             parsed_menu_item = ""
 
             while item_index < len(processed_items):
@@ -179,15 +211,41 @@ def parse_dishes(food_url):
 
 def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
 
+    DISH_TYPES = [
+        "Soup Of The Day",
+        "Main Course 1",
+        "Main Course 2",
+        "Light Lunch",
+        "Sides",
+        "Jacket Potatoes",
+        "Dessert",
+    ]
+    LAST_MENU_DAY_INDEX = 5
+
     menu = {}
 
-    dishes = parse_dishes(food_url=food_url)
+    dishes = parse_dishes(food_url=food_url, dish_types=DISH_TYPES)
 
-    restaurant_week = DAYS_OF_WEEK[:5]
+    restaurant_week = DAYS_OF_WEEK[:LAST_MENU_DAY_INDEX]
+
+    incorrectly_parsed_dishes = []
+
+    for dish_index, dish in dishes.items():
+        try:
+            assert len(dish) == len(restaurant_week)
+        except AssertionError:
+            logger.debug(f"Failed to properly parse dish {DISH_TYPES[dish_index-1]}")
+            incorrectly_parsed_dishes.append(dish_index)
+
+    for bad_dish in incorrectly_parsed_dishes:
+        dishes.pop(bad_dish)
 
     for day_index in range(len(restaurant_week)):
         day_name = restaurant_week[day_index]
 
-        menu[day_name] = [dishes[dish_index][day_index] for dish_index in dishes.keys()]
+        menu[day_name] = {
+            f"{ind+1}-{DISH_TYPES[dish_index-1]}": dishes[dish_index][day_index]
+            for ind, dish_index in enumerate(dishes.keys())
+        }
 
     return menu

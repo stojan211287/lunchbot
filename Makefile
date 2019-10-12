@@ -1,4 +1,4 @@
-.PHONY: build dev setup format lint venv requirements.txt requirements-dev.txt
+.PHONY: build dev setup format lint
 
 SHELL := /bin/bash
 
@@ -6,27 +6,24 @@ build: venv requirements.txt
 	./venv/bin/pip-sync requirements.txt
 
 dev: venv requirements-dev.txt
-	./venv/bin/pip-sync requirements-dev.txt
-
-setup: dev
-	source ./venv/bin/activate
-	black bot
-	flake8 bot
+	./venv/bin/pip-sync requirements-dev.txt 
 
 format: dev
-	black bot
+	./venv/bin/black bot
 
 lint: dev
-	flake8 bot
+	./venv/bin/flake8 bot
 
-venv:
+run: dev
+	./venv/bin/python3 -m bot.main
+
+venv: ./venv/
 	python3 -m venv venv
-	pip install --upgrade pip
-	./venv/bin/pip install pip-tools pre-commit
-	pre-commit install
+	pip3 install --upgrade pip
+	./venv/bin/pip3 install pip-tools
 
-requirements.txt:
+requirements.txt: requirements.in
 	./venv/bin/pip-compile -o requirements.txt --no-header --no-annotate requirements.in
 
-requirements-dev.txt:
+requirements-dev.txt: requirements-dev.in
 	./venv/bin/pip-compile -o requirements-dev.txt --no-header --no-annotate requirements-dev.in

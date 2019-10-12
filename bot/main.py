@@ -30,9 +30,19 @@ def whats_for_lunch_today(restaurant: str, day: str = None) -> Response:
         day = DAYS_OF_WEEK[datetime.today().weekday()]
     try:
         restaurant_menu = menus.menu(restaurant)
-        return jsonify(lunch=restaurant_menu[day])
+        pretty_restaurant_name = " ".join(
+            [word.capitalize() for word in restaurant.split("_")]
+        )
+        response_dict = {
+            f"Lunch at {pretty_restaurant_name} on {day.capitalize()}": restaurant_menu[
+                day
+            ]
+        }
+        return jsonify(**response_dict)
+
     except MenuError as menu_error:
         return jsonify(error=str(menu_error))
+
     except KeyError:
         error_msg = f"Sorry, the restaurant {restaurant} does not seem to have a menu for {day.capitalize()}."
         error_msg += " They do have a menu for: "
