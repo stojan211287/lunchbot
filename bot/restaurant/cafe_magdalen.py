@@ -105,6 +105,16 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.endswith("Cinnamon")
             or line_of_menu.endswith("Brownie")
             or line_of_menu.endswith("Salted")
+            or line_of_menu.endswith("Rocket")
+            or line_of_menu.endswith("Roast")
+            or line_of_menu.endswith("Wine")
+            or line_of_menu.endswith("Tomato")
+            or line_of_menu.endswith("Seasonal")
+            or line_of_menu.endswith("lentil")
+            or line_of_menu.endswith("Avocado")
+            or line_of_menu.endswith("Feta")
+            or line_of_menu.endswith("Pudding,")
+            or line_of_menu.endswith("Mint")
         )
 
     def join_previous_line(line_of_menu: str) -> bool:
@@ -159,8 +169,6 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             pdf_reader = PyPDF2.PdfFileReader(pdf_file)
 
             menu_text = pdf_reader.getPage(0).extractText().split(os.linesep)
-
-            logger.debug(menu_text)
 
             # SKIP WEEK NUMBER AND WEEKDAY NAMES
             LINES_TO_SKIP = 2
@@ -226,6 +234,8 @@ def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
 
     dishes = parse_dishes(food_url=food_url, dish_types=DISH_TYPES)
 
+    logger.debug(dishes)
+
     restaurant_week = DAYS_OF_WEEK[:LAST_MENU_DAY_INDEX]
 
     incorrectly_parsed_dishes = []
@@ -234,7 +244,7 @@ def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
         try:
             assert len(dish) == len(restaurant_week)
         except AssertionError:
-            logger.debug(f"Failed to properly parse dish {DISH_TYPES[dish_index-1]}")
+            logger.debug(f"Failed to properly parse dish {DISH_TYPES[dish_index]}")
             incorrectly_parsed_dishes.append(dish_index)
 
     for bad_dish in incorrectly_parsed_dishes:
@@ -244,7 +254,7 @@ def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
         day_name = restaurant_week[day_index]
 
         menu[day_name] = {
-            f"{ind+1}-{DISH_TYPES[dish_index-1]}": dishes[dish_index][day_index]
+            f"{ind+1}-{DISH_TYPES[dish_index]}": dishes[dish_index][day_index]
             for ind, dish_index in enumerate(dishes.keys())
         }
 
