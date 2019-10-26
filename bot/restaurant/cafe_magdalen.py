@@ -58,7 +58,7 @@ def get_menus(food_url):
 def parse_dishes(food_url: str, dish_types: typing.List[str]):
     def is_line_break(line_of_menu: str, dish_types=dish_types) -> bool:
         for dish_type in dish_types:
-            if line_of_menu.startswith(dish_type):
+            if line_of_menu.lower().startswith(dish_type.lower()):
                 return True
         return False
 
@@ -115,6 +115,9 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.endswith("Feta")
             or line_of_menu.endswith("Pudding,")
             or line_of_menu.endswith("Mint")
+            or line_of_menu.endswith("Mozzarella")
+            or line_of_menu.endswith("Potato")
+            or line_of_menu.endswith("Toasted")
         )
 
     def join_previous_line(line_of_menu: str) -> bool:
