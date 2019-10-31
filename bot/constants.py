@@ -8,4 +8,4 @@ DAYS_OF_WEEK = [
     "sunday",
 ]
 
-MENUS_IMPLEMENTED = ["cafe_magdalen"]
+MENUS_IMPLEMENTED = ["cafe_magdalen", "sadler_brasserie"]
