@@ -118,6 +118,15 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.endswith("Mozzarella")
             or line_of_menu.endswith("Potato")
             or line_of_menu.endswith("Toasted")
+            or line_of_menu.endswith("Mash")
+            or line_of_menu.endswith("a")
+            or line_of_menu.endswith("Balsamic")
+            or line_of_menu.endswith("Fresh")
+            or line_of_menu.endswith("Cashew")
+            or line_of_menu.endswith("New")
+            or line_of_menu.endswith("Ciabatta")
+            or line_of_menu.endswith("Puff")
+            or line_of_menu.endswith("Cheese ")
         )
 
     def join_previous_line(line_of_menu: str) -> bool:
@@ -127,6 +136,7 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.startswith("with")
             or line_of_menu.startswith("and")
             or line_of_menu.startswith("in")
+            or line_of_menu.startswith("Sausage")
         )
 
     def construct_return_line(line_of_menu: str) -> str:
