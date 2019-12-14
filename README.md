@@ -9,7 +9,7 @@ The service is hosted on [Heroku](https://what-about-lunch.herokuapp.com). Curre
 
 To get the weekly lunch menu, go to 
 
-[https://what-about-lunch.herokuapp.com/cafe_magdalen/](https://what-about-lunch.herokuapp.com/cafe_magdalen/)
+[https://what-about-lunch.herokuapp.com/cafe_magdalen/](https://what-about-lunch.herokuapp.com/cafe_magdalen)
 
 Or, if you're interested in a menu for a specific day - i.e. **wednesday**, go to 
 
