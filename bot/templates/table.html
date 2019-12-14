@@ -1,0 +1,36 @@
+<html>
+<head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/milligram-130.css') }}">
+</head>
+<body>
+<table border="1">
+    <thead>
+        <tr>
+            {% for menu in menu.values() %}
+                {% if loop.index0 == 0 %}
+                    {% for dish_type in menu.keys() %}
+                        {% if loop.index0 == 0 %}
+                            <th> </th> <th> {{ dish_type }} </th>
+                        {% else %}
+                            <th>
+                                {{ dish_type }}
+                            </th>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </tr>  
+    </thead>
+    <tbody>
+        {% for day, day_menu in menu.items() %}
+            <tr>
+                <td> {{ day.capitalize() }} </td>
+                {% for dish in day_menu.values() %}
+                    <td> {{ dish }} </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

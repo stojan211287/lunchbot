@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, Response, render_template
 
 from bot.constants import DAYS_OF_WEEK
 from bot.menu import Menus
@@ -25,19 +25,21 @@ def welcome():
 
 @app.route(rule="/<string:restaurant>/<string:day>", methods=["GET"])
 @app.route(rule="/<string:restaurant>", methods=["GET"])
-def whats_for_lunch_today(restaurant: str, day: str = None) -> Response:
-    if day is None:
-        day = DAYS_OF_WEEK[datetime.today().weekday()]
+def whats_for_lunch_today(restaurant: str, day: str = None) -> Response:    
     try:
         restaurant_menu = menus.menu(restaurant)
         pretty_restaurant_name = " ".join(
             [word.capitalize() for word in restaurant.split("_")]
         )
-        response_dict = {
-            f"Lunch at {pretty_restaurant_name} on {day.capitalize()}": restaurant_menu[
-                day
-            ]
-        }
+
+        if day is None:
+            return render_template("table.html", menu=restaurant_menu)
+        else:
+            response_dict = {
+                f"Lunch at {pretty_restaurant_name} on {day.capitalize()}": restaurant_menu[
+                    day
+                ]
+            }
         return jsonify(**response_dict)
 
     except MenuError as menu_error:

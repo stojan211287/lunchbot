@@ -17,7 +17,7 @@ lint: dev
 run: dev
 	./venv/bin/python3 -m bot.main
 
-venv: ./venv/
+venv: 
 	python3 -m venv venv
 	pip3 install --upgrade pip
 	./venv/bin/pip3 install pip-tools
