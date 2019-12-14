@@ -11,6 +11,8 @@ To get the weekly lunch menu, go to
 
 [https://what-about-lunch.herokuapp.com/cafe_magdalen/](https://what-about-lunch.herokuapp.com/cafe_magdalen)
 
+![](./examples/magdalen-lunch.png)
+
 Or, if you're interested in a menu for a specific day - i.e. **wednesday**, go to 
 
 [https://what-about-lunch.herokuapp.com/cafe_magdalen/wednesday](https://what-about-lunch.herokuapp.com/cafe_magdalen/wednesday)
