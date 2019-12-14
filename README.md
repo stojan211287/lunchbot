@@ -7,7 +7,7 @@ To test and debug locally, run
 
 The service is hosted on [Heroku](https://what-about-lunch.herokuapp.com). Currently, only the menu of [Cafe Magdalen](https://www.oxfordsp.com/parklife/magdalen-centre/) can be parsed.
 
-To get the daily lunch menu, go to 
+To get the weekly lunch menu, go to 
 
 [https://what-about-lunch.herokuapp.com/cafe_magdalen/](https://what-about-lunch.herokuapp.com/cafe_magdalen/)
 
