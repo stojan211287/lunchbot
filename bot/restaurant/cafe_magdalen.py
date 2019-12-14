@@ -44,9 +44,12 @@ def get_menus(food_url):
     week_number = this_week
 
     for link in menu_links:
-        ref = link.findChildren("a", recursive=False)[0]["href"]
+        anchor = link.findChildren("a", recursive=False)[0]
 
-        if ref.split(".")[-1] == "pdf":
+        ref = anchor["href"]
+        label = anchor.string
+
+        if (ref.split(".")[-1] == "pdf") and (label.startswith("Magdalen Cafe Menu W/C")):
             cycle_index = ref.split(".")[2].split("/")[-1].split("-")[-3]
             pdf_links[week_number] = (cycle_index, ref)
 
@@ -85,6 +88,8 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu == "New Potatoes"
             # EXCLUDE JACKET POTATO
             or line_of_menu == "Jacket Potato"
+            or line_of_menu == "Jacket Potatoes"
+            or line_of_menu == "Sides"
         )
 
     def join_next_line(line_of_menu: str) -> bool:
@@ -97,7 +102,7 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.endswith("Sage")
             or line_of_menu.endswith("Parmesan")
             or line_of_menu.endswith("Mediterrean")
-            or line_of_menu.endswith("Vegetable")
+            or line_of_menu.endswith("Vegetable ")
             or line_of_menu.endswith("Homemade")
             or line_of_menu.endswith("Honey")
             or line_of_menu.endswith("BBQ")
@@ -233,12 +238,10 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
 def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
 
     DISH_TYPES = [
-        "Soup Of The Day",
+        "Soup",
         "Main Course 1",
         "Main Course 2",
         "Light Lunch",
-        "Sides",
-        "Jacket Potatoes",
         "Dessert",
     ]
     LAST_MENU_DAY_INDEX = 5
@@ -265,10 +268,12 @@ def menu(food_url="http://www.oxfordsp.com/parklife/magdalen-centre/#food"):
 
     for day_index in range(len(restaurant_week)):
         day_name = restaurant_week[day_index]
+        
+        menu[day_name] = {}
 
-        menu[day_name] = {
-            f"{ind+1}-{DISH_TYPES[dish_index]}": dishes[dish_index][day_index]
-            for ind, dish_index in enumerate(dishes.keys())
-        }
+        for ind, dish_index in enumerate(dishes.keys()):
+            menu[day_name].update({
+                DISH_TYPES[dish_index-1]: dishes[dish_index][day_index]
+            })
 
     return menu
