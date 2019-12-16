@@ -3,7 +3,11 @@ A customizable bot for helping to decide what's for lunch
 
 To test and debug locally, run
 
-    make run
+    make test
+    
+To run in a setup similar to "production" (Uvicorn workers behind a Gunicorn server), run
+
+    make deploy
 
 The service is hosted on [Heroku](https://what-about-lunch.herokuapp.com). Currently, only the menu of [Cafe Magdalen](https://www.oxfordsp.com/parklife/magdalen-centre/) can be parsed.
 
