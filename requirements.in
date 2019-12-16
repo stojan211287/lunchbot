@@ -1,6 +1,8 @@
-beautifulsoup4>=4.7.*
-requests2>=2.16.*
 PyPDF2>=1.26.*
-flask>=1.0.2
-gunicorn>=19.9.0
 daiquiri
+fastapi
+aiofiles
+jinja2
+uvicorn
+beautifulsoup4
+requests2
