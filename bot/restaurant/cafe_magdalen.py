@@ -102,7 +102,7 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.endswith("Sage")
             or line_of_menu.endswith("Parmesan")
             or line_of_menu.endswith("Mediterrean")
-            or line_of_menu.endswith("Vegetable ")
+            or line_of_menu.endswith("Vegetable")
             or line_of_menu.endswith("Homemade")
             or line_of_menu.endswith("Honey")
             or line_of_menu.endswith("BBQ")
@@ -132,6 +132,7 @@ def parse_dishes(food_url: str, dish_types: typing.List[str]):
             or line_of_menu.endswith("Ciabatta")
             or line_of_menu.endswith("Puff")
             or line_of_menu.endswith("Cheese ")
+            or line_of_menu.endswith("Crème")
         )
 
     def join_previous_line(line_of_menu: str) -> bool:
