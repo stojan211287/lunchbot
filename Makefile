@@ -15,7 +15,7 @@ lint: dev
 	./venv/bin/flake8 bot
 
 run: dev
-	./venv/bin/python3 -m bot.main
+	./venv/bin/uvicorn bot.main:app --reload
 
 venv: 
 	python3 -m venv venv
