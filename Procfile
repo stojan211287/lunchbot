@@ -1,1 +1,1 @@
-web: uvicorn bot.main:app --preload
+web: uvicorn bot.main:app 
