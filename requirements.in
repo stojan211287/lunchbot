@@ -4,5 +4,6 @@ fastapi
 aiofiles
 jinja2
 uvicorn
+gunicorn
 beautifulsoup4
 requests2

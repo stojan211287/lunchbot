@@ -8,13 +8,16 @@ build: venv requirements.txt
 dev: venv requirements-dev.txt
 	./venv/bin/pip-sync requirements-dev.txt 
 
+deploy: build
+	./venv/bin/gunicorn -k uvicorn.workers.UvicornWorker bot.main:app --preload
+
 format: dev
 	./venv/bin/black bot
 
 lint: dev
 	./venv/bin/flake8 bot
 
-run: dev
+test: dev
 	./venv/bin/uvicorn bot.main:app --reload
 
 venv: 
