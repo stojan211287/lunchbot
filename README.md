@@ -20,3 +20,5 @@ To get the weekly lunch menu, go to
 Or, if you're interested in a menu for a specific day - i.e. **wednesday**, go to 
 
 [https://what-about-lunch.herokuapp.com/cafe_magdalen/wednesday](https://what-about-lunch.herokuapp.com/cafe_magdalen/wednesday)
+
+To access the API docs (via Swagger and FastAPI) go [https://what-about-lunch.herokuapp.com/docs#/](https://what-about-lunch.herokuapp.com/docs#/).
