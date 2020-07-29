@@ -7,7 +7,7 @@ daiquiri==1.6.0
 fastapi==0.45.0
 gunicorn==20.0.4
 h11==0.8.1
-httptools==0.0.13
+httptools==0.1.1
 idna==2.5
 jinja2==2.10.1
 markupsafe==1.1.1
@@ -17,7 +17,7 @@ requests2==2.16.0
 soupsieve==1.9.1
 starlette==0.12.9
 urllib3==1.21.1
-uvicorn==0.10.8
+uvicorn==0.11.7
 uvloop==0.14.0
 websockets==8.1
 
